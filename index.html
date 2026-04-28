@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jonge Strijkers Nederland</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --red:       #c8102e;
+      --red-dark:  #9a0a22;
+      --red-deep:  #6b0619;
+      --red-light: #e8374f;
+      --black:     #0a0a0c;
+      --off-white: #f5f0e8;
+      --cream:     #faf7f2;
+      --white:     #ffffff;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--red);
+      color: var(--off-white);
+      font-family: 'Cormorant Garamond', serif;
+      overflow-x: hidden;
+    }
+
+    /* Noise texture overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.5;
+      mix-blend-mode: overlay;
+    }
+
+    h1, h2, h3, h4, .heading {
+      font-family: 'Bebas Neue', sans-serif;
+      letter-spacing: 0.04em;
+    }
+    .serif { font-family: 'Cormorant Garamond', serif; }
+
+    /* ── NAVBAR ── */
+    #navbar {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 1000;
+      transition: all 0.4s ease;
+      background: transparent;
+    }
+    #navbar.scrolled {
+      background: rgba(155, 10, 34, 0.97);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.15);
+    }
+    .nav-link {
+      font-family: 'Bebas Neue', sans-serif;
+      letter-spacing: 0.1em;
+      color: rgba(245,240,232,0.85);
+      transition: color 0.2s;
+      position: relative;
+    }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -2px; left: 0;
+      width: 0; height: 1px;
+      background: var(--off-white);
+      transition: width 0.3s ease;
+    }
+    .nav-link:hover { color: var(--white); }
+    .nav-link:hover::after { width: 100%; }
+
+    /* ── HERO ── */
+    .hero-split {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+    @media (max-width: 768px) {
+      .hero-split { grid-template-columns: 1fr; }
+      .hero-img-col { display: none; }
+    }
+
+    .hero-text-col {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 8rem 4rem 4rem;
+      background: var(--red-dark);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-text-col::before {
+      content: '';
+      position: absolute;
+      top: -200px; left: -200px;
+      width: 600px; height: 600px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.04);
+      pointer-events: none;
+    }
+    .hero-img-col {
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-img-col img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: brightness(0.6) saturate(0.8) contrast(1.1);
+      transform: scale(1.04);
+    }
+    .hero-img-col::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to right, var(--red-dark) 0%, transparent 30%);
+    }
+
+    .hero-headline {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(4.5rem, 10vw, 8rem);
+      line-height: 0.9;
+      letter-spacing: 0.02em;
+      color: var(--off-white);
+    }
+    .hero-headline .outline {
+      -webkit-text-stroke: 2px var(--off-white);
+      color: transparent;
+    }
+
+    /* ── BUTTONS ── */
+    .btn-white {
+      background: var(--off-white);
+      color: var(--red-dark);
+      font-family: 'Bebas Neue', sans-serif;
+      letter-spacing: 0.15em;
+      transition: all 0.25s ease;
+      display: inline-block;
+    }
+    .btn-white:hover {
+      background: var(--white);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+    }
+    .btn-outline-white {
+      border: 1.5px solid rgba(245,240,232,0.6);
+      color: var(--off-white);
+      font-family: 'Bebas Neue', sans-serif;
+      letter-spacing: 0.15em;
+      transition: all 0.25s ease;
+      display: inline-block;
+    }
+    .btn-outline-white:hover {
+      border-color: var(--off-white);
+      background: rgba(255,255,255,0.1);
+    }
+    .btn-black {
+      background: var(--black);
+      color: var(--off-white);
+      font-family: 'Bebas Neue', sans-serif;
+      letter-spacing: 0.15em;
+      transition: all 0.25s ease;
+      display: inline-block;
+    }
+    .btn-black:hover {
+      background: #1a1a1e;
+      transform: translateY(-2px);
+    }
+
+    /* ── REVEAL ── */
+    .reveal {
+      opacity: 0; transform: translateY(36px);
+      transition: all 0.75s cubic-bezier(0.22,1,0.36,1);
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-l {
+      opacity: 0; transform: translateX(-36px);
+      transition: all 0.75s cubic-bezier(0.22,1,0.36,1);
+    }
+    .reveal-l.visible { opacity: 1; transform: translateX(0); }
+    .reveal-r {
+      opacity: 0; transform: translateX(36px);
+      transition: all 0.75s cubic-bezier(0.22,1,0.36,1);
+    }
+    .reveal-r.visible { opacity: 1; transform: translateX(0); }
+
+    /* ── WHITE SECTION ── */
+    .section-white {
+      background: var(--cream);
+      color: var(--black);
+    }
+
+    /* ── BLACK SECTION ── */
+    .section-black {
+      background: var(--black);
+      color: var(--off-white);
+    }
+
+    /* ── ORCHESTRA CARDS ── */
+    .orch-card {
+      background: var(--white);
+      border-top: 3px solid var(--red);
+      transition: all 0.3s ease;
+    }
+    .orch-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 40px rgba(200,16,46,0.15);
+    }
+    .age-pill {
+      background: var(--red);
+      color: var(--white);
+      font-family: 'Bebas Neue', sans-serif;
+      letter-spacing: 0.1em;
+      font-size: 0.75rem;
+      padding: 0.25rem 0.75rem;
+    }
+
+    /* ── CONCERT TABLE ── */
+    .concert-row {
+      border-bottom: 1px solid rgba(200,16,46,0.15);
+      transition: background 0.2s;
+    }
+    .concert-row:hover { background: rgba(200,16,46,0.04); }
+
+    /* ── STAT CARDS on red ── */
+    .stat-card-inv {
+      border: 1px solid rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.06);
+      transition: all 0.3s ease;
+    }
+    .stat-card-inv:hover {
+      background: rgba(255,255,255,0.12);
+      border-color: rgba(255,255,255,0.4);
+    }
+    .big-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(3rem, 7vw, 5.5rem);
+      color: var(--white);
+      line-height: 1;
+    }
+
+    /* ── GALLERY ── */
+    .gallery-item {
+      overflow: hidden; position: relative;
+    }
+    .gallery-item img {
+      transition: transform 0.6s ease;
+      width: 100%; height: 100%; object-fit: cover;
+    }
+    .gallery-item:hover img { transform: scale(1.06); }
+    .g-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(10,10,12,0.85) 0%, transparent 50%);
+      opacity: 0; transition: opacity 0.3s ease;
+    }
+    .gallery-item:hover .g-overlay { opacity: 1; }
+
+    /* ── LINES ── */
+    .white-line { width: 50px; height: 2px; background: var(--off-white); }
+    .red-line-sm { width: 50px; height: 2px; background: var(--red); }
+
+    /* ── MOBILE MENU ── */
+    #mobile-menu { display: none; }
+    #mobile-menu.open { display: block; }
+
+    /* ── LANG ── */
+    .lang-btn {
+      font-family: 'Bebas Neue', sans-serif;
+      letter-spacing: 0.1em;
+      color: rgba(245,240,232,0.4);
+      transition: color 0.2s;
+      font-size: 0.75rem;
+    }
+    .lang-btn.active { color: var(--off-white); }
+
+    /* ── SCROLL ANIM ── */
+    @keyframes scrollDown {
+      0% { transform: translateY(0); opacity:1; }
+      100% { transform: translateY(10px); opacity:0; }
+    }
+    .scroll-dot { animation: scrollDown 1.4s ease-in-out infinite; }
+
+    /* ── WENEN CARD ── */
+    .wenen-card {
+      background: var(--red-deep);
+      border: 1px solid rgba(255,255,255,0.2);
+      position: relative; overflow: hidden;
+    }
+    .wenen-card::before {
+      content: 'W';
+      position: absolute;
+      right: -20px; top: -40px;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 200px;
+      color: rgba(255,255,255,0.03);
+      pointer-events: none;
+      line-height: 1;
+    }
+
+    /* ── IMAGE FRAME ── */
+    .img-frame-white { position: relative; }
+    .img-frame-white::after {
+      content: '';
+      position: absolute;
+      inset: 10px -10px -10px 10px;
+      border: 1.5px solid rgba(255,255,255,0.25);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    @media (max-width: 768px) {
+      .hero-text-col { padding: 6rem 2rem 3rem; }
+      .img-frame-white::after { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══ NAVBAR ═══ -->
+<nav id="navbar" class="px-6 py-4">
+  <div class="max-w-7xl mx-auto flex items-center justify-between">
+    <a href="#home" class="flex items-center gap-3">
+      <img src="https://jongestrijkers.nl/wp-content/uploads/2026/02/JSN_Logo_RGB-scaled.png"
+           alt="JSN" class="h-10 object-contain brightness-0 invert" />
+    </a>
+
+    <div class="hidden md:flex items-center gap-7">
+      <a href="#over-ons" class="nav-link text-sm" data-i18n="nav.over">OVER ONS</a>
+      <a href="#orkesten" class="nav-link text-sm" data-i18n="nav.ork">ORKESTEN</a>
+      <a href="#concerten" class="nav-link text-sm" data-i18n="nav.con">CONCERTEN</a>
+      <a href="#media" class="nav-link text-sm" data-i18n="nav.media">MEDIA</a>
+      <a href="#wenen" class="nav-link text-sm" data-i18n="nav.wenen">WENEN 2026</a>
+      <a href="#contact" class="btn-white px-5 py-2 text-sm" data-i18n="nav.join">AANMELDEN</a>
+      <div class="flex items-center gap-2">
+        <button class="lang-btn active" onclick="setLang('nl')" id="lang-nl">NL</button>
+        <span style="color:rgba(245,240,232,0.2);font-size:0.7rem;">|</span>
+        <button class="lang-btn" onclick="setLang('en')" id="lang-en">EN</button>
+      </div>
+    </div>
+
+    <button id="hamburger" onclick="toggleMenu()" class="md:hidden flex flex-col gap-1.5 p-2">
+      <span class="w-6 h-0.5 bg-white transition-all" id="bar1"></span>
+      <span class="w-6 h-0.5 bg-white transition-all" id="bar2"></span>
+      <span class="w-6 h-0.5 bg-white transition-all" id="bar3"></span>
+    </button>
+  </div>
+
+  <div id="mobile-menu" class="md:hidden mt-2 px-4">
+    <div class="flex flex-col gap-4 p-6 rounded-lg" style="background:var(--red-deep);">
+      <a href="#over-ons" class="nav-link text-lg" onclick="toggleMenu()" data-i18n="nav.over">OVER ONS</a>
+      <a href="#orkesten" class="nav-link text-lg" onclick="toggleMenu()" data-i18n="nav.ork">ORKESTEN</a>
+      <a href="#concerten" class="nav-link text-lg" onclick="toggleMenu()" data-i18n="nav.con">CONCERTEN</a>
+      <a href="#media" class="nav-link text-lg" onclick="toggleMenu()" data-i18n="nav.media">MEDIA</a>
+      <a href="#wenen" class="nav-link text-lg" onclick="toggleMenu()" data-i18n="nav.wenen">WENEN 2026</a>
+      <a href="#contact" class="btn-white px-5 py-3 text-center text-sm" onclick="toggleMenu()" data-i18n="nav.join">AANMELDEN</a>
+      <div class="flex items-center gap-3 pt-2 border-t" style="border-color:rgba(255,255,255,0.15);">
+        <button class="lang-btn active" onclick="setLang('nl')" id="lang-nl-mob">NL</button>
+        <span style="color:rgba(255,255,255,0.2)">|</span>
+        <button class="lang-btn" onclick="setLang('en')" id="lang-en-mob">EN</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══ HERO — split layout ═══ -->
+<section id="home" class="hero-split">
+  <div class="hero-text-col">
+    <p class="serif italic text-base mb-5 reveal" style="color:rgba(245,240,232,0.55);letter-spacing:0.2em;" data-i18n="hero.sub">Amsterdam · Nederland</p>
+
+    <h1 class="hero-headline mb-6 reveal" style="transition-delay:0.1s;">
+      <span data-i18n="hero.l1">JONGE</span><br>
+      <span class="outline" data-i18n="hero.l2">STRIJKERS</span><br>
+      <span data-i18n="hero.l3">NEDERLAND</span>
+    </h1>
+
+    <div class="white-line mb-6 reveal" style="transition-delay:0.2s;"></div>
+
+    <p class="serif text-xl leading-relaxed mb-8 reveal" style="color:rgba(245,240,232,0.7);max-width:420px;transition-delay:0.25s;" data-i18n="hero.desc">
+      Muzikale talenten van 5 tot 21 jaar uit heel Nederland — samen spelen, samen groeien, samen schitteren.
+    </p>
+
+    <div class="flex flex-wrap gap-3 reveal" style="transition-delay:0.35s;">
+      <a href="#orkesten" class="btn-white px-7 py-3.5 text-sm" data-i18n="hero.cta1">ONTDEK DE ORKESTEN</a>
+      <a href="#concerten" class="btn-outline-white px-7 py-3.5 text-sm" data-i18n="hero.cta2">CONCERTAGENDA</a>
+    </div>
+
+    <div class="mt-16 flex items-center gap-3 reveal" style="transition-delay:0.5s;">
+      <div style="width:24px;height:40px;border:1.5px solid rgba(245,240,232,0.3);border-radius:12px;display:flex;align-items:flex-start;justify-content:center;padding-top:6px;">
+        <div class="scroll-dot" style="width:4px;height:4px;border-radius:50%;background:var(--off-white);"></div>
+      </div>
+      <span class="serif text-xs" style="color:rgba(245,240,232,0.35);letter-spacing:0.2em;" data-i18n="hero.scroll">SCROLL</span>
+    </div>
+  </div>
+
+  <div class="hero-img-col">
+    <img src="https://jongestrijkers.nl/wp-content/uploads/2026/02/Dance-the-Music-©-Foppe-Schut-_lowres-_S236948.jpg"
+         alt="Jonge Strijkers in Concert" />
+    <div class="absolute bottom-10 right-8 z-10" style="background:var(--off-white);padding:1.25rem 1.5rem;">
+      <p class="heading text-3xl" style="color:var(--red-dark);line-height:1;" data-i18n="hero.badge.num">10</p>
+      <p class="heading text-sm" style="color:var(--red-dark);" data-i18n="hero.badge.text">JAAR JUBILEUM</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ STATS BAR ═══ -->
+<section style="background:var(--red-deep);padding:3rem 1.5rem;border-top:1px solid rgba(255,255,255,0.1);border-bottom:1px solid rgba(255,255,255,0.1);">
+  <div class="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6">
+    <div class="stat-card-inv p-6 text-center reveal">
+      <div class="big-num">4</div>
+      <p class="heading text-lg" style="color:rgba(245,240,232,0.65);" data-i18n="stat.ork">ORKESTEN</p>
+    </div>
+    <div class="stat-card-inv p-6 text-center reveal" style="transition-delay:.08s;">
+      <div class="big-num">8+</div>
+      <p class="heading text-lg" style="color:rgba(245,240,232,0.65);" data-i18n="stat.con">CONCERTEN / JAAR</p>
+    </div>
+    <div class="stat-card-inv p-6 text-center reveal" style="transition-delay:.16s;">
+      <div class="big-num">10</div>
+      <p class="heading text-lg" style="color:rgba(245,240,232,0.65);" data-i18n="stat.jaar">JAAR BESTAAN</p>
+    </div>
+    <div class="stat-card-inv p-6 text-center reveal" style="transition-delay:.24s;">
+      <div class="big-num">5–21</div>
+      <p class="heading text-lg" style="color:rgba(245,240,232,0.65);" data-i18n="stat.age">JAAR LEEFTIJD</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ OVER ONS — cream section ═══ -->
+<section id="over-ons" class="section-white py-28 px-6">
+  <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-16 items-center">
+
+    <div class="reveal reveal-l relative">
+      <div class="img-frame-white relative z-10">
+        <img src="https://jongestrijkers.nl/wp-content/uploads/2026/02/8S6A1449-1619x1080.jpg"
+             alt="Kamerorkest" class="w-full object-cover relative z-10"
+             style="height:520px;filter:contrast(1.05);" />
+      </div>
+      <div class="absolute -bottom-4 -right-4 z-20" style="background:var(--red);padding:1rem 1.5rem;">
+        <p class="heading text-xs" style="color:rgba(255,255,255,0.65);" data-i18n="over.img.sub">KAMERORKEST</p>
+        <p class="heading text-2xl" style="color:#fff;">AMSTERDAM</p>
+      </div>
+    </div>
+
+    <div class="reveal reveal-r" style="transition-delay:0.15s;">
+      <p class="serif italic text-sm tracking-widest mb-4" style="color:var(--red);" data-i18n="over.label">OVER ONS</p>
+      <h2 class="heading text-6xl md:text-7xl leading-none mb-5" style="color:var(--black);" data-i18n="over.title">BELEEF HET PLEZIER</h2>
+      <div class="red-line-sm mb-8"></div>
+
+      <div class="mb-6 p-5" style="border-left:3px solid var(--red);background:rgba(200,16,46,0.05);">
+        <p class="serif text-lg italic leading-relaxed" style="color:#333;" data-i18n="over.quote">
+          "Muzikale talenten uit heel Nederland komen naar Amsterdam om samen te spelen in een van de mooiste jeugdorkesten van het land."
+        </p>
+      </div>
+
+      <p class="serif text-base leading-relaxed mb-5" style="color:#555;" data-i18n="over.p1">
+        Jonge Strijkers Nederland biedt een doorlopende leerlijn voor jonge strijkers — van eerste stappen in samenspel tot musiceren op hoog niveau. Met vier strijkorkesten, kamermuziek, een jaarlijks zomerkamp en tours langs de mooiste concertzalen ter wereld.
+      </p>
+      <p class="serif text-base leading-relaxed mb-8" style="color:#555;" data-i18n="over.p2">
+        Eerder traden de Jonge Strijkers op in Carnegie Hall New York en het Concertgebouw Amsterdam. Komende zomer: de Musikverein in Wenen.
+      </p>
+
+      <div class="grid grid-cols-2 gap-5 mb-8">
+        <div style="border-left:3px solid var(--red);padding-left:1rem;">
+          <p class="heading text-xl" style="color:var(--red);">Carnegie Hall</p>
+          <p class="serif text-sm" style="color:#999;" data-i18n="over.ny">New York, 2025</p>
+        </div>
+        <div style="border-left:3px solid var(--red);padding-left:1rem;">
+          <p class="heading text-xl" style="color:var(--red);">Musikverein</p>
+          <p class="serif text-sm" style="color:#999;" data-i18n="over.wien">Wenen, 2026</p>
+        </div>
+        <div style="border-left:3px solid var(--red);padding-left:1rem;">
+          <p class="heading text-xl" style="color:var(--red);">Concertgebouw</p>
+          <p class="serif text-sm" style="color:#999;" data-i18n="over.ams">Amsterdam</p>
+        </div>
+        <div style="border-left:3px solid var(--red);padding-left:1rem;">
+          <p class="heading text-xl" style="color:var(--red);">Tivoli/Vredenburg</p>
+          <p class="serif text-sm" style="color:#999;" data-i18n="over.utr">Utrecht</p>
+        </div>
+      </div>
+
+      <a href="https://jongestrijkers.nl/audities-jonge-strijkers" target="_blank"
+         class="btn-black px-8 py-4 text-sm" data-i18n="over.cta">MELD JE NU AAN</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ORKESTEN — red background ═══ -->
+<section id="orkesten" style="background:var(--red);padding:6rem 1.5rem;">
+  <div class="max-w-7xl mx-auto">
+    <div class="mb-14 reveal">
+      <p class="serif italic text-sm tracking-widest mb-3" style="color:rgba(245,240,232,0.55);" data-i18n="ork.label">ONZE ENSEMBLES</p>
+      <h2 class="heading text-6xl md:text-8xl leading-none" style="color:var(--off-white);" data-i18n="ork.title">STRIJKORKESTEN</h2>
+      <div class="white-line mt-5"></div>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-6">
+      <div class="orch-card p-8 reveal reveal-l">
+        <div class="flex justify-between items-start mb-5">
+          <h3 class="heading text-4xl" style="color:var(--black);" data-i18n="ork.kids.t">JONGE STRIJKERS KIDS</h3>
+          <span class="age-pill ml-3 flex-shrink-0" data-i18n="ork.kids.age">5–9</span>
+        </div>
+        <p class="serif text-base leading-relaxed mb-6" style="color:#555;" data-i18n="ork.kids.d">
+          Beginnende strijkers ontdekken het samenspelen op een speelse manier. Luisteren, leren en musiceren met leeftijdsgenoten. Wekelijks onder leiding van violiste Emma Breedveld. Minimaal twee concerten per jaar op bijzondere locaties.
+        </p>
+        <div class="flex items-center justify-between">
+          <img src="https://jongestrijkers.nl/wp-content/uploads/2026/02/JSN_Logo_Kids_Compact_RGB.png"
+               alt="Kids" class="h-8 object-contain opacity-30" />
+          <a href="https://jongestrijkers.nl/audities-jonge-strijkers" target="_blank"
+             class="heading text-sm" style="color:var(--red);letter-spacing:0.1em;" data-i18n="ork.cta">AANMELDEN →</a>
+        </div>
+      </div>
+
+      <div class="orch-card p-8 reveal reveal-r" style="transition-delay:.1s;">
+        <div class="flex justify-between items-start mb-5">
+          <h3 class="heading text-4xl" style="color:var(--black);" data-i18n="ork.jun.t">JUNIORORKEST</h3>
+          <span class="age-pill ml-3 flex-shrink-0" data-i18n="ork.jun.age">9–12</span>
+        </div>
+        <p class="serif text-base leading-relaxed mb-6" style="color:#555;" data-i18n="ork.jun.d">
+          Voor jonge strijkers met basis-ervaring. Samenspelen binnen klassiek repertoire, notenschrift lezen, streektechnieken verdiepen. Onder leiding van violiste Lonneke van Straalen met professionele coaches. Concertervaringen op bijzondere locaties.
+        </p>
+        <div class="flex items-center justify-between">
+          <img src="https://jongestrijkers.nl/wp-content/uploads/2026/02/JSN_Logo_Juniororkest_Compact_RGB.png"
+               alt="Junior" class="h-8 object-contain opacity-30" />
+          <a href="https://jongestrijkers.nl/audities-jonge-strijkers" target="_blank"
+             class="heading text-sm" style="color:var(--red);letter-spacing:0.1em;" data-i18n="ork.cta">AANMELDEN →</a>
+        </div>
+      </div>
+
+      <div class="orch-card p-8 reveal reveal-l" style="transition-delay:.2s;">
+        <div class="flex justify-between items-start mb-3">
+          <h3 class="heading text-4xl" style="color:var(--black);" data-i18n="ork.int.t">INTERMEZZO ENSEMBLE</h3>
+          <span class="age-pill ml-3 flex-shrink-0" data-i18n="ork.int.age">12–15</span>
+        </div>
+        <div class="mb-4">
+          <span class="serif text-xs italic px-2 py-1" style="border:1px solid var(--red);color:var(--red);" data-i18n="ork.int.new">Nieuw vanaf 2026</span>
+        </div>
+        <p class="serif text-base leading-relaxed mb-6" style="color:#555;" data-i18n="ork.int.d">
+          De nieuwe schakel tussen Juniororkest en Kamerorkest. Play-and-lead principe: musici spelen zelf mee en sturen het ensemble van binnenuit. Onder leiding van Naomi Bach en Michael Waterman, met Nico Schippers.
+        </p>
+        <div class="flex items-center justify-between">
+          <img src="https://jongestrijkers.nl/wp-content/uploads/2026/04/JSN_Logo_Intermezzo_Ensembles_Compact_RGB.png"
+               alt="Intermezzo" class="h-8 object-contain opacity-30" />
+          <a href="https://jongestrijkers.nl/audities-jonge-strijkers" target="_blank"
+             class="heading text-sm" style="color:var(--red);letter-spacing:0.1em;" data-i18n="ork.cta">AANMELDEN →</a>
+        </div>
+      </div>
+
+      <div class="orch-card p-8 reveal reveal-r" style="transition-delay:.3s;">
+        <div class="flex justify-between items-start mb-5">
+          <h3 class="heading text-4xl" style="color:var(--black);" data-i18n="ork.kam.t">KAMERORKEST</h3>
+          <span class="age-pill ml-3 flex-shrink-0" data-i18n="ork.kam.age">14–21</span>
+        </div>
+        <p class="serif text-base leading-relaxed mb-6" style="color:#555;" data-i18n="ork.kam.d">
+          Het hoogste niveau binnen JSN. Internationale tournees, samenwerking met topsolisten, optredens in Carnegie Hall en de Musikverein Wenen. Onder leiding van artistiek directeur Nico Schippers. Regelmatige coaching door professionele orkestmusici.
+        </p>
+        <div class="flex items-center justify-between">
+          <img src="https://jongestrijkers.nl/wp-content/uploads/2026/02/JSN_Logo_Kamerorkest_Compact_RGB.png"
+               alt="Kamer" class="h-8 object-contain opacity-30" />
+          <a href="https://jongestrijkers.nl/audities-jonge-strijkers" target="_blank"
+             class="heading text-sm" style="color:var(--red);letter-spacing:0.1em;" data-i18n="ork.cta">AANMELDEN →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-8 relative overflow-hidden reveal" style="transition-delay:.4s;height:380px;">
+      <img src="https://jongestrijkers.nl/wp-content/uploads/2026/02/8S6A2178-1620x1080.jpg"
+           alt="Strijkers" class="w-full h-full object-cover" style="filter:brightness(0.5) contrast(1.1);" />
+      <div class="absolute inset-0 flex items-center justify-center">
+        <p class="heading text-center" style="font-size:clamp(3rem,8vw,7rem);color:rgba(245,240,232,0.9);" data-i18n="ork.banner">SAMEN MUSICEREN</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CONCERTEN — cream section ═══ -->
+<section id="concerten" class="section-white py-24 px-6">
+  <div class="max-w-7xl mx-auto">
+    <div class="mb-12 reveal">
+      <p class="serif italic text-sm tracking-widest mb-3" style="color:var(--red);" data-i18n="con.label">SEIZOEN 2025–2026</p>
+      <h2 class="heading text-6xl md:text-8xl leading-none" style="color:var(--black);" data-i18n="con.title">CONCERTEN</h2>
+      <div class="red-line-sm mt-4"></div>
+    </div>
+
+    <div class="reveal" style="transition-delay:.1s;">
+      <div class="concert-row py-5 flex flex-col md:flex-row md:items-center gap-3">
+        <div class="md:w-44 flex-shrink-0">
+          <p class="heading text-2xl" style="color:var(--red);">25 APR 2026</p>
+          <p class="serif text-xs" style="color:#bbb;">15:00</p>
+        </div>
+        <div class="flex-1">
+          <p class="heading text-xl" style="color:var(--black);" data-i18n="con.1">SNAAR FESTIVAL</p>
+          <p class="serif text-sm" style="color:#888;">Utrecht — Tivoli/Vredenburg</p>
+        </div>
+        <a href="https://jongestrijkers.nl/agenda/snaartjes-festival" target="_blank"
+           class="heading text-xs px-4 py-2 flex-shrink-0" style="border:1px solid var(--red);color:var(--red);letter-spacing:0.1em;" data-i18n="con.info">MEER INFO</a>
+      </div>
+
+      <div class="concert-row py-5 flex flex-col md:flex-row md:items-center gap-3">
+        <div class="md:w-44 flex-shrink-0">
+          <p class="heading text-2xl" style="color:var(--red);">1 MEI 2026</p>
+          <p class="serif text-xs" style="color:#bbb;">12:30</p>
+        </div>
+        <div class="flex-1">
+          <p class="heading text-xl" style="color:var(--black);" data-i18n="con.2">KINDERLUNCHCONCERT</p>
+          <p class="serif text-sm" style="color:#888;">Amsterdam — Het Concertgebouw</p>
+        </div>
+        <a href="https://jongestrijkers.nl/?post_type=agenda&p=3665" target="_blank"
+           class="heading text-xs px-4 py-2 flex-shrink-0" style="border:1px solid var(--red);color:var(--red);letter-spacing:0.1em;" data-i18n="con.info">MEER INFO</a>
+      </div>
+
+      <div class="concert-row py-5 flex flex-col md:flex-row md:items-center gap-3">
+        <div class="md:w-44 flex-shrink-0">
+          <p class="heading text-2xl" style="color:var(--red);">15 MEI 2026</p>
+          <p class="serif text-xs" style="color:#bbb;">12:30</p>
+        </div>
+        <div class="flex-1">
+          <p class="heading text-xl" style="color:var(--black);" data-i18n="con.3">LUNCHCONCERT GROTE ZAAL</p>
+          <p class="serif text-sm" style="color:#888;">Utrecht — Tivoli/Vredenburg</p>
+        </div>
+        <a href="https://jongestrijkers.nl/?post_type=agenda&p=3666" target="_blank"
+           class="heading text-xs px-4 py-2 flex-shrink-0" style="border:1px solid var(--red);color:var(--red);letter-spacing:0.1em;" data-i18n="con.info">MEER INFO</a>
+      </div>
+
+      <div class="concert-row py-5 flex flex-col md:flex-row md:items-center gap-3">
+        <div class="md:w-44 flex-shrink-0">
+          <p class="heading text-2xl" style="color:var(--red);">13 JUN 2026</p>
+          <p class="serif text-xs" style="color:#bbb;">15:30</p>
+        </div>
+        <div class="flex-1">
+          <p class="heading text-xl" style="color:var(--black);" data-i18n="con.4">CONNECTING CONVERSATIONS</p>
+          <p class="serif text-sm" style="color:#888;">Amsterdam — De Duif · i.s.m. Erik Scherder & Stichting Papageno</p>
+        </div>
+        <a href="https://jongestrijkers.nl/?post_type=agenda&p=3668" target="_blank"
+           class="heading text-xs px-4 py-2 flex-shrink-0" style="border:1px solid var(--red);color:var(--red);letter-spacing:0.1em;" data-i18n="con.info">MEER INFO</a>
+      </div>
+
+      <div class="concert-row py-5 flex flex-col md:flex-row md:items-center gap-3">
+        <div class="md:w-44 flex-shrink-0">
+          <p class="heading text-2xl" style="color:var(--red);">21 JUN 2026</p>
+          <p class="serif text-xs" style="color:#bbb;">12:00 & 14:00</p>
+        </div>
+        <div class="flex-1">
+          <p class="heading text-xl" style="color:var(--black);" data-i18n="con.5">ZOMERCONCERTEN</p>
+          <p class="serif text-sm" style="color:#888;">Amsterdam — Vondelpark & Oosterpark</p>
+        </div>
+        <a href="https://jongestrijkers.nl/?post_type=agenda&p=3670" target="_blank"
+           class="heading text-xs px-4 py-2 flex-shrink-0" style="border:1px solid var(--red);color:var(--red);letter-spacing:0.1em;" data-i18n="con.info">MEER INFO</a>
+      </div>
+
+      <!-- Wenen highlight -->
+      <div class="mt-3 py-6 px-6 flex flex-col md:flex-row md:items-center gap-3 reveal"
+           style="background:var(--red);transition-delay:.2s;">
+        <div class="md:w-44 flex-shrink-0">
+          <p class="heading text-2xl" style="color:rgba(245,240,232,0.65);">3–8 JUL 2026</p>
+          <p class="serif text-xs" style="color:rgba(245,240,232,0.45);">TOURNEE</p>
+        </div>
+        <div class="flex-1">
+          <p class="heading text-xl" style="color:var(--off-white);" data-i18n="con.wien">MUSIKVEREIN WENEN ✦</p>
+          <p class="serif text-sm" style="color:rgba(245,240,232,0.55);" data-i18n="con.wien.sub">Summa Cum Laude International Festival</p>
+        </div>
+        <a href="https://www.voordekunst.nl/projecten/21182-help-jonge-strijkers-naar-wenen-1" target="_blank"
+           class="btn-white px-5 py-2.5 text-xs flex-shrink-0" data-i18n="con.steun">STEUN ONS</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ WENEN — black section ═══ -->
+<section id="wenen" class="section-black py-24 px-6">
+  <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-14 items-center">
+
+    <div class="reveal reveal-l">
+      <a href="https://www.voordekunst.nl/projecten/21182-help-jonge-strijkers-naar-wenen-1" target="_blank">
+        <img src="https://jongestrijkers.nl/wp-content/uploads/2026/04/Wenen-tourbeeld_voordekunst.jpg"
+             alt="Wenen Campaign" class="w-full object-cover hover:opacity-90 transition-opacity"
+             style="height:460px;border:1px solid rgba(200,16,46,0.4);" />
+      </a>
+      <div class="mt-4 flex items-center gap-3">
+        <div style="width:40px;height:2px;background:var(--red);"></div>
+        <p class="serif text-sm italic" style="color:rgba(245,240,232,0.4);" data-i18n="wenen.deadline">Crowdfundingcampagne t/m 17 mei 2026</p>
+      </div>
+    </div>
+
+    <div class="reveal reveal-r" style="transition-delay:.2s;">
+      <p class="serif italic text-sm tracking-widest mb-4" style="color:var(--red);" data-i18n="wenen.label">TOURNEE WENEN 2026</p>
+      <h2 class="heading leading-none mb-5" style="font-size:clamp(3rem,7vw,5.5rem);color:var(--off-white);" data-i18n="wenen.title">HELP ONS NAAR WENEN!</h2>
+      <div class="mb-8" style="width:50px;height:2px;background:var(--red);"></div>
+
+      <p class="serif text-base leading-relaxed mb-4" style="color:rgba(245,240,232,0.65);" data-i18n="wenen.p1">
+        De Jonge Strijkers krijgen een unieke kans: optreden in de beroemde Musikverein in Wenen — een van de iconischste concertzalen ter wereld. Van 2 t/m 8 juli 2026 tijdens het internationale festival Summa Cum Laude.
+      </p>
+      <p class="serif text-base leading-relaxed mb-4" style="color:rgba(245,240,232,0.65);" data-i18n="wenen.p2">
+        Naast de Musikverein spelen ze ook op MuTh (Wiener Sängerknaben) en volgen masterclasses aan de Universität für Musik. Eerder traden ze op in Carnegie Hall New York en het Concertgebouw Amsterdam.
+      </p>
+      <p class="serif text-sm italic mb-8" style="color:rgba(245,240,232,0.35);" data-i18n="wenen.tax">Donaties fiscaal aftrekbaar (ANBI) — gift van €100 kost netto ca. €54</p>
+
+      <div class="wenen-card p-6 mb-8">
+        <p class="heading text-3xl mb-1" style="color:var(--off-white);" data-i18n="wenen.goal">CROWDFUNDINGDOEL</p>
+        <p class="serif text-sm" style="color:rgba(245,240,232,0.5);" data-i18n="wenen.goal.sub">Elke donatie, groot of klein, brengt ons dichter bij Wenen</p>
+      </div>
+
+      <a href="https://www.voordekunst.nl/projecten/21182-help-jonge-strijkers-naar-wenen-1"
+         target="_blank" class="btn-white px-9 py-4 text-sm" data-i18n="wenen.cta">DONEER VIA VOORDEKUNST</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ MEDIA — on red ═══ -->
+<section id="media" style="background:var(--red);padding:6rem 1.5rem;">
+  <div class="max-w-7xl mx-auto">
+    <div class="mb-12 reveal">
+      <p class="serif italic text-sm tracking-widest mb-3" style="color:rgba(245,240,232,0.55);" data-i18n="media.label">FOTO & VIDEO</p>
+      <h2 class="heading text-6xl md:text-8xl leading-none" style="color:var(--off-white);" data-i18n="media.title">MEDIA</h2>
+      <div class="white-line mt-4"></div>
+    </div>
+
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-3 reveal" style="transition-delay:.1s;">
+      <div class="gallery-item col-span-2 md:col-span-1" style="height:320px;">
+        <img src="https://jongestrijkers.nl/wp-content/uploads/2026/02/8S6A1800-1619x1080.jpg" alt="Kids" />
+        <div class="g-overlay flex items-end p-4">
+          <p class="heading text-xl" style="color:#fff;" data-i18n="media.1">KIDS ENSEMBLE</p>
+        </div>
+      </div>
+      <div class="gallery-item" style="height:320px;">
+        <img src="https://jongestrijkers.nl/wp-content/uploads/2026/04/8S6A2326-1619x1080.jpg" alt="Intermezzo" />
+        <div class="g-overlay flex items-end p-4">
+          <p class="heading text-xl" style="color:#fff;" data-i18n="media.2">INTERMEZZO</p>
+        </div>
+      </div>
+      <div class="gallery-item" style="height:320px;">
+        <img src="https://jongestrijkers.nl/wp-content/uploads/2020/11/COBO_Kleinezaal_02.jpeg" alt="Concertgebouw" />
+        <div class="g-overlay flex items-end p-4">
+          <p class="heading text-xl" style="color:#fff;" data-i18n="media.3">CONCERTGEBOUW</p>
+        </div>
+      </div>
+      <div class="gallery-item col-span-2" style="height:280px;">
+        <img src="https://jongestrijkers.nl/wp-content/uploads/2026/02/Vondelpark_Openlucht_Theatre-scaled.webp" alt="Vondelpark" />
+        <div class="g-overlay flex items-end p-4">
+          <p class="heading text-2xl" style="color:#fff;" data-i18n="media.4">VONDELPARK OPENLUCHTTHEATER</p>
+        </div>
+      </div>
+      <div class="gallery-item" style="height:280px;">
+        <img src="https://jongestrijkers.nl/wp-content/uploads/2026/02/IMG_7779-scaled.jpg" alt="New York" />
+        <div class="g-overlay flex items-end p-4">
+          <p class="heading text-xl" style="color:#fff;" data-i18n="media.5">NEW YORK 2025</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-6 reveal" style="transition-delay:.25s;">
+      <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;">
+        <iframe src="https://www.youtube.com/embed?listType=user_uploads&list=UCKg9-kL6kyyWMidhRfWxhGw"
+          class="absolute inset-0 w-full h-full" frameborder="0"
+          allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture"
+          allowfullscreen title="JSN YouTube"></iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ZOMERKAMP — cream ═══ -->
+<section class="section-white py-24 px-6">
+  <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-14 items-center">
+    <div class="reveal">
+      <p class="serif italic text-sm tracking-widest mb-4" style="color:var(--red);" data-i18n="kamp.label">ELKE ZOMER</p>
+      <h2 class="heading text-6xl md:text-7xl leading-none mb-5" style="color:var(--black);" data-i18n="kamp.title">ZOMERKAMP 2026</h2>
+      <div class="red-line-sm mb-8"></div>
+      <p class="serif text-base leading-relaxed mb-6" style="color:#555;" data-i18n="kamp.desc">
+        Elk jaar organiseert Jonge Strijkers Nederland een intensief zomerkamp op het landgoed van Nyenrode Business Universiteit in Breukelen. Een week vol muziek, coaching, vriendschappen en onvergetelijke herinneringen.
+      </p>
+      <div class="mb-8 p-5" style="border:1px solid var(--red);">
+        <p class="heading text-3xl" style="color:var(--red);" data-i18n="kamp.datum">21–25 JULI 2026</p>
+        <p class="serif text-sm" style="color:#999;" data-i18n="kamp.loc">Nyenrode Business Universiteit, Breukelen</p>
+      </div>
+      <a href="https://jongestrijkers.nl/zomerkamp-2026" target="_blank"
+         class="btn-black px-8 py-4 text-sm" data-i18n="kamp.cta">MEER OVER HET ZOMERKAMP</a>
+    </div>
+    <div class="reveal reveal-r" style="transition-delay:.2s;">
+      <a href="https://jongestrijkers.nl/zomerkamp-2026" target="_blank">
+        <img src="https://jongestrijkers.nl/wp-content/uploads/2025/11/A3-digi-flyer-zomerkamp-2026.jpg"
+             alt="Zomerkamp 2026" class="w-full object-cover hover:opacity-90 transition-opacity"
+             style="max-height:520px;object-position:top;" />
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CONTACT — red ═══ -->
+<section id="contact" style="background:var(--red-dark);padding:6rem 1.5rem;">
+  <div class="max-w-5xl mx-auto text-center">
+    <p class="serif italic text-sm tracking-widest mb-4" style="color:rgba(245,240,232,0.5);" data-i18n="contact.label">MEEDOEN</p>
+    <h2 class="heading reveal" style="font-size:clamp(3rem,10vw,7rem);color:var(--off-white);line-height:0.95;" data-i18n="contact.title">MELD JE NU AAN</h2>
+    <div class="white-line mx-auto my-8 reveal" style="transition-delay:.1s;"></div>
+
+    <p class="serif text-xl leading-relaxed max-w-2xl mx-auto mb-10 reveal"
+       style="color:rgba(245,240,232,0.65);transition-delay:.2s;" data-i18n="contact.desc">
+      Speel jij viool, altviool, cello of contrabas? Ben je tussen 5 en 21 jaar? Kom samenspelen in een van de leukste jeugdorkesten van Nederland!
+    </p>
+
+    <div class="grid md:grid-cols-3 gap-5 mb-12 reveal" style="transition-delay:.3s;">
+      <div class="stat-card-inv p-6 text-center">
+        <p class="heading text-4xl mb-2" style="color:#fff;">🎻</p>
+        <p class="heading text-lg mb-1" data-i18n="contact.i1">INSTRUMENT</p>
+        <p class="serif text-sm" style="color:rgba(245,240,232,0.5);" data-i18n="contact.i1.sub">Viool, altviool, cello, contrabas</p>
+      </div>
+      <div class="stat-card-inv p-6 text-center">
+        <p class="heading text-4xl mb-2" style="color:#fff;">📍</p>
+        <p class="heading text-lg mb-1" data-i18n="contact.i2">LOCATIE</p>
+        <p class="serif text-sm" style="color:rgba(245,240,232,0.5);" data-i18n="contact.i2.sub">Wekelijkse repetities Amsterdam</p>
+      </div>
+      <div class="stat-card-inv p-6 text-center">
+        <p class="heading text-4xl mb-2" style="color:#fff;">✉️</p>
+        <p class="heading text-lg mb-1">CONTACT</p>
+        <a href="mailto:info@jongestrijkers.nl" class="serif text-sm block" style="color:rgba(245,240,232,0.75);">info@jongestrijkers.nl</a>
+        <a href="tel:+31624956696" class="serif text-sm" style="color:rgba(245,240,232,0.45);">+31 6 249 56 696</a>
+      </div>
+    </div>
+
+    <div class="flex flex-wrap justify-center gap-4 reveal" style="transition-delay:.4s;">
+      <a href="https://jongestrijkers.nl/audities-jonge-strijkers" target="_blank"
+         class="btn-white px-10 py-5 text-base" data-i18n="contact.cta1">AUDITIES AANVRAGEN</a>
+      <a href="https://jongestrijkers.nl/nieuwsbrief" target="_blank"
+         class="btn-outline-white px-10 py-5 text-base" data-i18n="contact.cta2">NIEUWSBRIEF</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer class="section-black py-16 px-6" style="border-top:1px solid rgba(200,16,46,0.3);">
+  <div class="max-w-7xl mx-auto grid md:grid-cols-4 gap-10 mb-12">
+    <div class="md:col-span-2">
+      <img src="https://jongestrijkers.nl/wp-content/uploads/2026/02/JSN_Logo_RGB-scaled.png"
+           alt="JSN" class="h-12 object-contain brightness-0 invert mb-5 opacity-70" />
+      <p class="serif text-sm leading-relaxed mb-6" style="color:rgba(245,240,232,0.4);" data-i18n="footer.desc">
+        Het plezier van samenspelen voor muzikale talenten van 5 tot 21 jaar. Vier strijkorkesten, internationale tournees en concerten op de mooiste podia van Nederland en de wereld.
+      </p>
+      <div class="flex gap-3">
+        <a href="https://www.facebook.com/jongestrijkers/" target="_blank"
+           class="w-9 h-9 border flex items-center justify-center text-xs transition-colors hover:border-red-500"
+           style="border-color:rgba(255,255,255,0.12);color:rgba(245,240,232,0.35);">f</a>
+        <a href="https://www.youtube.com/channel/UCKg9-kL6kyyWMidhRfWxhGw" target="_blank"
+           class="w-9 h-9 border flex items-center justify-center text-xs transition-colors hover:border-red-500"
+           style="border-color:rgba(255,255,255,0.12);color:rgba(245,240,232,0.35);">▶</a>
+        <a href="http://www.instagram.com/jonge_strijkers_en_blazers" target="_blank"
+           class="w-9 h-9 border flex items-center justify-center text-xs transition-colors hover:border-red-500"
+           style="border-color:rgba(255,255,255,0.12);color:rgba(245,240,232,0.35);">ig</a>
+      </div>
+    </div>
+    <div>
+      <p class="heading text-base mb-5" style="color:var(--red);" data-i18n="footer.ork">ORKESTEN</p>
+      <ul class="space-y-2">
+        <li><a href="https://jongestrijkers.nl/orkesten" target="_blank" class="serif text-sm transition-colors hover:text-white" style="color:rgba(245,240,232,0.35);" data-i18n="f.kids">Kids (5–9 jaar)</a></li>
+        <li><a href="https://jongestrijkers.nl/orkesten" target="_blank" class="serif text-sm transition-colors hover:text-white" style="color:rgba(245,240,232,0.35);" data-i18n="f.jun">Juniororkest (9–12)</a></li>
+        <li><a href="https://jongestrijkers.nl/orkesten" target="_blank" class="serif text-sm transition-colors hover:text-white" style="color:rgba(245,240,232,0.35);" data-i18n="f.int">Intermezzo (12–15)</a></li>
+        <li><a href="https://jongestrijkers.nl/orkesten" target="_blank" class="serif text-sm transition-colors hover:text-white" style="color:rgba(245,240,232,0.35);" data-i18n="f.kam">Kamerorkest (14–21)</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="heading text-base mb-5" style="color:var(--red);" data-i18n="footer.info">INFORMATIE</p>
+      <ul class="space-y-2">
+        <li><a href="https://jongestrijkers.nl/repetities" target="_blank" class="serif text-sm transition-colors hover:text-white" style="color:rgba(245,240,232,0.35);" data-i18n="f.rep">Repetities</a></li>
+        <li><a href="https://jongestrijkers.nl/tarieven" target="_blank" class="serif text-sm transition-colors hover:text-white" style="color:rgba(245,240,232,0.35);" data-i18n="f.tar">Tarieven</a></li>
+        <li><a href="https://jongestrijkers.nl/artistiek-directeur" target="_blank" class="serif text-sm transition-colors hover:text-white" style="color:rgba(245,240,232,0.35);" data-i18n="f.art">Artistiek directeur</a></li>
+        <li><a href="https://jongestrijkers.nl/anbi" target="_blank" class="serif text-sm transition-colors hover:text-white" style="color:rgba(245,240,232,0.35);" data-i18n="f.anbi">ANBI / Steun ons</a></li>
+        <li><a href="https://jongestrijkers.nl/contact" target="_blank" class="serif text-sm transition-colors hover:text-white" style="color:rgba(245,240,232,0.35);" data-i18n="f.contact">Contact</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="border-t pt-8 flex flex-col md:flex-row justify-between items-center gap-3" style="border-color:rgba(255,255,255,0.05);">
+    <p class="serif text-xs" style="color:rgba(245,240,232,0.2);" data-i18n="footer.cr">© 2025–2026 Stichting Jonge Strijkers Nederland. Alle rechten voorbehouden.</p>
+    <p class="serif text-xs" style="color:rgba(245,240,232,0.2);">Nassaukade 81-2 · 1052 CT Amsterdam · info@jongestrijkers.nl</p>
+  </div>
+</footer>
+
+<script>
+let currentLang = 'nl';
+
+const t = {
+  nl: {
+    'nav.over':'OVER ONS','nav.ork':'ORKESTEN','nav.con':'CONCERTEN','nav.media':'MEDIA','nav.wenen':'WENEN 2026','nav.join':'AANMELDEN',
+    'hero.sub':'Amsterdam · Nederland','hero.l1':'JONGE','hero.l2':'STRIJKERS','hero.l3':'NEDERLAND',
+    'hero.desc':'Muzikale talenten van 5 tot 21 jaar uit heel Nederland — samen spelen, samen groeien, samen schitteren.',
+    'hero.cta1':'ONTDEK DE ORKESTEN','hero.cta2':'CONCERTAGENDA','hero.scroll':'SCROLL',
+    'hero.badge.num':'10','hero.badge.text':'JAAR JUBILEUM',
+    'stat.ork':'ORKESTEN','stat.con':'CONCERTEN / JAAR','stat.jaar':'JAAR BESTAAN','stat.age':'JAAR LEEFTIJD',
+    'over.label':'OVER ONS','over.title':'BELEEF HET PLEZIER','over.img.sub':'KAMERORKEST',
+    'over.quote':'"Muzikale talenten uit heel Nederland komen naar Amsterdam om samen te spelen in een van de mooiste jeugdorkesten van het land."',
+    'over.p1':'Jonge Strijkers Nederland biedt een doorlopende leerlijn voor jonge strijkers — van eerste stappen in samenspel tot musiceren op hoog niveau. Met vier strijkorkesten, kamermuziek, een jaarlijks zomerkamp en tours langs de mooiste concertzalen ter wereld.',
+    'over.p2':'Eerder traden de Jonge Strijkers op in Carnegie Hall New York en het Concertgebouw Amsterdam. Komende zomer: de Musikverein in Wenen.',
+    'over.ny':'New York, 2025','over.wien':'Wenen, 2026','over.ams':'Amsterdam','over.utr':'Utrecht','over.cta':'MELD JE NU AAN',
+    'ork.label':'ONZE ENSEMBLES','ork.title':'STRIJKORKESTEN','ork.cta':'AANMELDEN →','ork.banner':'SAMEN MUSICEREN',
+    'ork.kids.t':'JONGE STRIJKERS KIDS','ork.kids.age':'5–9','ork.kids.d':'Beginnende strijkers ontdekken het samenspelen op een speelse manier. Luisteren, leren en musiceren met leeftijdsgenoten. Wekelijks onder leiding van violiste Emma Breedveld. Minimaal twee concerten per jaar op bijzondere locaties.',
+    'ork.jun.t':'JUNIORORKEST','ork.jun.age':'9–12','ork.jun.d':'Voor jonge strijkers met basis-ervaring. Samenspelen binnen klassiek repertoire, notenschrift lezen, streektechnieken verdiepen. Onder leiding van violiste Lonneke van Straalen met professionele coaches.',
+    'ork.int.t':'INTERMEZZO ENSEMBLE','ork.int.age':'12–15','ork.int.new':'Nieuw vanaf 2026','ork.int.d':'De nieuwe schakel tussen Juniororkest en Kamerorkest. Play-and-lead principe: musici spelen zelf mee en sturen het ensemble van binnenuit. Onder leiding van Naomi Bach en Michael Waterman, met Nico Schippers.',
+    'ork.kam.t':'KAMERORKEST','ork.kam.age':'14–21','ork.kam.d':'Het hoogste niveau binnen JSN. Internationale tournees, samenwerking met topsolisten, optredens in Carnegie Hall en de Musikverein Wenen. Onder leiding van artistiek directeur Nico Schippers.',
+    'con.label':'SEIZOEN 2025–2026','con.title':'CONCERTEN',
+    'con.1':'SNAAR FESTIVAL','con.2':'KINDERLUNCHCONCERT','con.3':'LUNCHCONCERT GROTE ZAAL','con.4':'CONNECTING CONVERSATIONS','con.5':'ZOMERCONCERTEN',
+    'con.wien':'MUSIKVEREIN WENEN ✦','con.wien.sub':'Summa Cum Laude International Festival','con.info':'MEER INFO','con.steun':'STEUN ONS',
+    'wenen.label':'TOURNEE WENEN 2026','wenen.title':'HELP ONS NAAR WENEN!',
+    'wenen.p1':'De Jonge Strijkers krijgen een unieke kans: optreden in de beroemde Musikverein in Wenen — een van de iconischste concertzalen ter wereld. Van 2 t/m 8 juli 2026 tijdens het internationale festival Summa Cum Laude.',
+    'wenen.p2':'Naast de Musikverein spelen ze ook op MuTh (Wiener Sängerknaben) en volgen masterclasses aan de Universität für Musik. Eerder traden ze op in Carnegie Hall New York en het Concertgebouw Amsterdam.',
+    'wenen.tax':'Donaties fiscaal aftrekbaar (ANBI) — gift van €100 kost netto ca. €54',
+    'wenen.goal':'CROWDFUNDINGDOEL','wenen.goal.sub':'Elke donatie, groot of klein, brengt ons dichter bij Wenen',
+    'wenen.cta':'DONEER VIA VOORDEKUNST','wenen.deadline':'Crowdfundingcampagne t/m 17 mei 2026',
+    'media.label':'FOTO & VIDEO','media.title':'MEDIA','media.1':'KIDS ENSEMBLE','media.2':'INTERMEZZO','media.3':'CONCERTGEBOUW','media.4':'VONDELPARK OPENLUCHTTHEATER','media.5':'NEW YORK 2025',
+    'kamp.label':'ELKE ZOMER','kamp.title':'ZOMERKAMP 2026','kamp.datum':'21–25 JULI 2026','kamp.loc':'Nyenrode Business Universiteit, Breukelen',
+    'kamp.desc':'Elk jaar organiseert Jonge Strijkers Nederland een intensief zomerkamp op het landgoed van Nyenrode Business Universiteit in Breukelen. Een week vol muziek, coaching, vriendschappen en onvergetelijke herinneringen.',
+    'kamp.cta':'MEER OVER HET ZOMERKAMP',
+    'contact.label':'MEEDOEN','contact.title':'MELD JE NU AAN',
+    'contact.desc':'Speel jij viool, altviool, cello of contrabas? Ben je tussen 5 en 21 jaar? Kom samenspelen in een van de leukste jeugdorkesten van Nederland!',
+    'contact.i1':'INSTRUMENT','contact.i1.sub':'Viool, altviool, cello, contrabas','contact.i2':'LOCATIE','contact.i2.sub':'Wekelijkse repetities Amsterdam',
+    'contact.cta1':'AUDITIES AANVRAGEN','contact.cta2':'NIEUWSBRIEF',
+    'footer.desc':'Het plezier van samenspelen voor muzikale talenten van 5 tot 21 jaar. Vier strijkorkesten, internationale tournees en concerten op de mooiste podia van Nederland en de wereld.',
+    'footer.ork':'ORKESTEN','footer.info':'INFORMATIE','footer.cr':'© 2025–2026 Stichting Jonge Strijkers Nederland. Alle rechten voorbehouden.',
+    'f.kids':'Kids (5–9 jaar)','f.jun':'Juniororkest (9–12)','f.int':'Intermezzo (12–15)','f.kam':'Kamerorkest (14–21)',
+    'f.rep':'Repetities','f.tar':'Tarieven','f.art':'Artistiek directeur','f.anbi':'ANBI / Steun ons','f.contact':'Contact',
+  },
+  en: {
+    'nav.over':'ABOUT US','nav.ork':'ORCHESTRAS','nav.con':'CONCERTS','nav.media':'MEDIA','nav.wenen':'VIENNA 2026','nav.join':'JOIN US',
+    'hero.sub':'Amsterdam · Netherlands','hero.l1':'YOUNG','hero.l2':'STRINGS','hero.l3':'NETHERLANDS',
+    'hero.desc':'Musical talents aged 5 to 21 from across the Netherlands — playing together, growing together, shining together.',
+    'hero.cta1':'DISCOVER THE ORCHESTRAS','hero.cta2':'CONCERT AGENDA','hero.scroll':'SCROLL',
+    'hero.badge.num':'10','hero.badge.text':'YEAR ANNIVERSARY',
+    'stat.ork':'ORCHESTRAS','stat.con':'CONCERTS / YEAR','stat.jaar':'YEARS ACTIVE','stat.age':'YEARS OF AGE',
+    'over.label':'ABOUT US','over.title':'EXPERIENCE THE JOY','over.img.sub':'CHAMBER ORCHESTRA',
+    'over.quote':'"Musical talents from across the Netherlands come to Amsterdam to play together in one of the finest youth orchestras in the country."',
+    'over.p1':'Jonge Strijkers Nederland offers a continuous learning path for young string players — from first steps in ensemble playing to performing at a high level. Four string orchestras, chamber music, annual summer camp and tours to the world\'s greatest concert halls.',
+    'over.p2':'The Jonge Strijkers have previously performed at Carnegie Hall New York and the Concertgebouw Amsterdam. This summer: the Musikverein Vienna.',
+    'over.ny':'New York, 2025','over.wien':'Vienna, 2026','over.ams':'Amsterdam','over.utr':'Utrecht','over.cta':'APPLY NOW',
+    'ork.label':'OUR ENSEMBLES','ork.title':'STRING ORCHESTRAS','ork.cta':'APPLY →','ork.banner':'PLAYING TOGETHER',
+    'ork.kids.t':'JONGE STRIJKERS KIDS','ork.kids.age':'5–9','ork.kids.d':'Beginner string players discover ensemble playing in a playful way. Listening, learning and making music with peers. Weekly rehearsals led by violinist Emma Breedveld. At least two concerts per year at special venues.',
+    'ork.jun.t':'JUNIOR ORCHESTRA','ork.jun.age':'9–12','ork.jun.d':'For young string players with some experience. Ensemble playing within classical repertoire, reading notation, developing bowing technique. Led by violinist Lonneke van Straalen with professional coaches.',
+    'ork.int.t':'INTERMEZZO ENSEMBLE','ork.int.age':'12–15','ork.int.new':'New from 2026','ork.int.d':'The new link between Junior Orchestra and Chamber Orchestra. Play-and-lead principle: musicians play along themselves. Led by Naomi Bach and Michael Waterman, with Nico Schippers.',
+    'ork.kam.t':'CHAMBER ORCHESTRA','ork.kam.age':'14–21','ork.kam.d':'The highest level within JSN. International tours, collaboration with top soloists, performances at Carnegie Hall and Musikverein Vienna. Led by artistic director Nico Schippers.',
+    'con.label':'SEASON 2025–2026','con.title':'CONCERTS',
+    'con.1':'SNAAR FESTIVAL','con.2':'CHILDREN\'S LUNCH CONCERT','con.3':'GRAND HALL LUNCH CONCERT','con.4':'CONNECTING CONVERSATIONS','con.5':'SUMMER CONCERTS',
+    'con.wien':'MUSIKVEREIN VIENNA ✦','con.wien.sub':'Summa Cum Laude International Festival','con.info':'MORE INFO','con.steun':'SUPPORT US',
+    'wenen.label':'TOUR VIENNA 2026','wenen.title':'HELP US GO TO VIENNA!',
+    'wenen.p1':'The Jonge Strijkers have a unique opportunity: to perform in the famous Musikverein in Vienna — one of the most iconic concert halls in the world. From 2–8 July 2026 during the international Summa Cum Laude festival.',
+    'wenen.p2':'In addition to the Musikverein, they will also perform at MuTh (Wiener Sängerknaben) and attend masterclasses at the Universität für Musik. Previously performed at Carnegie Hall and the Concertgebouw.',
+    'wenen.tax':'Donations are tax-deductible (ANBI) — a €100 donation costs approximately €54 net',
+    'wenen.goal':'CROWDFUNDING GOAL','wenen.goal.sub':'Every donation, large or small, brings us closer to Vienna',
+    'wenen.cta':'DONATE VIA VOORDEKUNST','wenen.deadline':'Crowdfunding campaign until 17 May 2026',
+    'media.label':'PHOTOS & VIDEO','media.title':'MEDIA','media.1':'KIDS ENSEMBLE','media.2':'INTERMEZZO','media.3':'CONCERTGEBOUW','media.4':'VONDELPARK OPEN AIR THEATRE','media.5':'NEW YORK 2025',
+    'kamp.label':'EVERY SUMMER','kamp.title':'SUMMER CAMP 2026','kamp.datum':'21–25 JULY 2026','kamp.loc':'Nyenrode Business University, Breukelen',
+    'kamp.desc':'Every year, Jonge Strijkers Nederland organises an intensive summer camp at the Nyenrode Business University estate in Breukelen. A week full of music, coaching, friendships and unforgettable memories.',
+    'kamp.cta':'MORE ABOUT THE SUMMER CAMP',
+    'contact.label':'JOIN US','contact.title':'APPLY NOW',
+    'contact.desc':'Do you play violin, viola, cello or double bass? Are you between 5 and 21 years old? Come play together in one of the finest youth orchestras in the Netherlands!',
+    'contact.i1':'INSTRUMENT','contact.i1.sub':'Violin, viola, cello, double bass','contact.i2':'LOCATION','contact.i2.sub':'Weekly rehearsals in Amsterdam',
+    'contact.cta1':'REQUEST AUDITION','contact.cta2':'NEWSLETTER',
+    'footer.desc':'The joy of playing together for musical talents aged 5 to 21. Four string orchestras, international tours and concerts at the finest venues in the Netherlands and worldwide.',
+    'footer.ork':'ORCHESTRAS','footer.info':'INFORMATION','footer.cr':'© 2025–2026 Stichting Jonge Strijkers Nederland. All rights reserved.',
+    'f.kids':'Kids (5–9 years)','f.jun':'Junior Orchestra (9–12)','f.int':'Intermezzo (12–15)','f.kam':'Chamber Orchestra (14–21)',
+    'f.rep':'Rehearsals','f.tar':'Fees','f.art':'Artistic Director','f.anbi':'ANBI / Support us','f.contact':'Contact',
+  }
+};
+
+function setLang(lang) {
+  currentLang = lang;
+  document.documentElement.lang = lang;
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (t[lang] && t[lang][key]) el.textContent = t[lang][key];
+  });
+  ['nl','en'].forEach(l => {
+    ['','-mob'].forEach(s => {
+      const b = document.getElementById('lang-' + l + s);
+      if (b) b.classList.toggle('active', l === lang);
+    });
+  });
+}
+
+const nav = document.getElementById('navbar');
+window.addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 60));
+
+function toggleMenu() {
+  const m = document.getElementById('mobile-menu');
+  const b1 = document.getElementById('bar1');
+  const b2 = document.getElementById('bar2');
+  const b3 = document.getElementById('bar3');
+  m.classList.toggle('open');
+  const o = m.classList.contains('open');
+  b1.style.transform = o ? 'rotate(45deg) translate(4px,5px)' : '';
+  b2.style.opacity = o ? '0' : '';
+  b3.style.transform = o ? 'rotate(-45deg) translate(4px,-5px)' : '';
+}
+
+const ro = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.08, rootMargin: '0px 0px -50px 0px' });
+
+document.querySelectorAll('.reveal, .reveal-l, .reveal-r').forEach(el => ro.observe(el));
+
+setLang('nl');
+</script>
+</body>
+</html>
